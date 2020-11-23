@@ -11,6 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Sprite\g_questionMark.ascspr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Sprite\rps_paper.ascspr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
