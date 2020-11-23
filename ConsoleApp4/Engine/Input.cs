@@ -25,6 +25,13 @@ namespace Engine
                 return true;
             else return false;
         }
+        public static bool KeyAnyState()
+        {
+            for (int i = 0; i < 255; i++)
+                if (KeyState((Key)i))
+                    return true;
+            return false;
+        }
 
         /// <summary>
         /// Gets pressed state for a virtual key
@@ -43,6 +50,13 @@ namespace Engine
             }
             if (GetAsyncKeyState((short)key) == 0)
                 keyMap[(short)key] = NOT_PRESSED;
+            return false;
+        }
+        public static bool KeyAnyPressed()
+        {
+            for (int i = 0; i < 255; i++)
+                if (KeyPressed((Key)i))
+                    return true;
             return false;
         }
 
@@ -67,6 +81,14 @@ namespace Engine
             }
             return false;
         }
+        public static bool KeyAnyReleased()
+        {
+            for (int i = 0; i < 255; i++)
+                if (KeyReleased((Key)i))
+                    return true;
+            return false;
+        }
+
 
         /// <summary>
         /// Reads string

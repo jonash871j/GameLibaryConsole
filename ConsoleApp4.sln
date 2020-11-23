@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe in Console", "ConsoleApp4\TicTacToe in Console.csproj", "{B3162668-B991-4711-ACD6-50D0D0BD7880}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLibaryConsole", "ConsoleApp4\GameLibaryConsole.csproj", "{B3162668-B991-4711-ACD6-50D0D0BD7880}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "TicTacToe\TicTacToe.csproj", "{C80F6383-FBAC-487B-99C8-BDF1E37F296E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe", "TicTacToe\TicTacToe.csproj", "{C80F6383-FBAC-487B-99C8-BDF1E37F296E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe in WPF", "TicTacToe in WPF\TicTacToe in WPF.csproj", "{5CF67CD8-63AC-4DB7-975C-CB4EC89AFDC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors", "RockPaperScissors\RockPaperScissors.csproj", "{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5CF67CD8-63AC-4DB7-975C-CB4EC89AFDC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CF67CD8-63AC-4DB7-975C-CB4EC89AFDC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CF67CD8-63AC-4DB7-975C-CB4EC89AFDC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

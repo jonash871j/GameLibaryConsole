@@ -20,7 +20,7 @@ namespace Engine
 				for (int x = 0; x < sprite.Width; x++)
                 {
 					if (sprite.CharMap[y, x] != '\0')
-						ConsoleEx.WriteCoord(x1 + x, ySum, sprite.CharMap[y, x], sprite.ColorMap[y, x]);
+						ConsoleEx.WriteCharacter(x1 + x, ySum, sprite.CharMap[y, x], sprite.ColorMap[y, x]);
                 }
             }
         }
@@ -51,7 +51,7 @@ namespace Engine
 			{
 				for (int x = 0; x < ConsoleEx.Width; x++)
 				{
-					ConsoleEx.WriteCoord(x, y, character, color);
+					ConsoleEx.WriteCharacter(x, y, character, color);
 				}
 			}
 		}
@@ -85,30 +85,30 @@ namespace Engine
 			int x, y;
 
 			// Draw start- and end point
-			ConsoleEx.WriteCoord(x1, y1, character, color);
-			ConsoleEx.WriteCoord(x2, y2, character, color);
+			ConsoleEx.WriteCharacter(x1, y1, character, color);
+			ConsoleEx.WriteCharacter(x2, y2, character, color);
 
 			// All drawing and calculation
 			// SLOPE AX																	
 			if ((xp >= ym) && (yp <= xp))												
 				for (x = 0; x < xp; x++)
-					ConsoleEx.WriteCoord(x1 + x, (int)(y1 + ax * x), character, color);			
+					ConsoleEx.WriteCharacter(x1 + x, (int)(y1 + ax * x), character, color);			
 			else																		
 				// SLOPE -AY															
 				if (ym >= xm)															
 					for (y = ym; y > 0; y--)
-						ConsoleEx.WriteCoord((int)(x1 -(ay * y)), y1 -y, character, color);		
+						ConsoleEx.WriteCharacter((int)(x1 -(ay * y)), y1 -y, character, color);		
 				else																	
 																				
 					// SLOPE -AX	 													
 					if (yp <= xm)														
 						for (x = xm; x > 0; x--)
-					ConsoleEx.WriteCoord(x1 -x, (int)(y1 -(ax * x)), character, color);	
+					ConsoleEx.WriteCharacter(x1 -x, (int)(y1 -(ax * x)), character, color);	
 																				
 					// SLOPE AY															
 					else																
 						for (y = 0; y < yp; y++)
-							ConsoleEx.WriteCoord((int)(x1 + ay * y), y1 + y, character, color);	
+							ConsoleEx.WriteCharacter((int)(x1 + ay * y), y1 + y, character, color);	
         }
 
 		/// <summary>
@@ -137,10 +137,10 @@ namespace Engine
 				{
 					// Rectangle fill
 					if (outline == false)
-						ConsoleEx.WriteCoord(x, y, character, color);
+						ConsoleEx.WriteCharacter(x, y, character, color);
 					// Rectangle Outline
 					else if ((x == x1) || (y == y1) || (x == x2) || (y == y2))
-						ConsoleEx.WriteCoord(x, y, character, color);
+						ConsoleEx.WriteCharacter(x, y, character, color);
 				}
 			}
 		}

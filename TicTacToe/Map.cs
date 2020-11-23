@@ -1,4 +1,4 @@
-﻿namespace TicTacToe
+﻿namespace TicTacToeLogic
 {
     public class Map
     {

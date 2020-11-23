@@ -394,7 +394,7 @@ namespace Engine
         /// <summary>
         /// Writes char to console at a specific coordinate 
         /// </summary>
-        public static void WriteCoord(int x, int y, ushort character = '█', byte color = Color.Silver)
+        public static void WriteCharacter(int x, int y, ushort character = '█', byte color = Color.Silver)
         {
             if ((y < Height) && (y >= 0) && (x < Width) && (x >= 0))
             {
@@ -406,7 +406,7 @@ namespace Engine
         /// <summary>
         /// Writes string to console at a specific coordinate 
         /// </summary>
-        public static void WriteCoord(int x, int y, string text, byte color = Color.Silver, TextDirection direction = TextDirection.LeftToRight)
+        public static void WriteCoord(int x, int y, string text = "", byte color = Color.Silver, TextDirection direction = TextDirection.LeftToRight)
         {
             LineX = x;
             LineY = y;
@@ -434,10 +434,10 @@ namespace Engine
                 // Switch text drawing direction
                 switch (direction)
                 {
-                case TextDirection.LeftToRight: WriteCoord(x + offset, y, textArray[i], color); break;
-                case TextDirection.RightToLeft: WriteCoord(x - offset, y, textArray[i], color); break;
-                case TextDirection.TopToButtom: WriteCoord(x, y + offset, textArray[i], color); break;
-                case TextDirection.ButtomToTop: WriteCoord(x, y - offset, textArray[i], color); break;
+                case TextDirection.LeftToRight: WriteCharacter(x + offset, y, textArray[i], color); break;
+                case TextDirection.RightToLeft: WriteCharacter(x - offset, y, textArray[i], color); break;
+                case TextDirection.TopToButtom: WriteCharacter(x, y + offset, textArray[i], color); break;
+                case TextDirection.ButtomToTop: WriteCharacter(x, y - offset, textArray[i], color); break;
                 }
 
                 if (textArray[i] != '\n')
@@ -472,7 +472,7 @@ namespace Engine
                     continue;
                 }
 
-                WriteCoord(x + offset, LineY, textArray[i], color);
+                WriteCharacter(x + offset, LineY, textArray[i], color);
 
                 if (textArray[i] != '\n')
                     offset++;

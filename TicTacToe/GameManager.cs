@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TicTacToe
+namespace TicTacToeLogic
 {
     public enum WinType
     {
@@ -19,16 +19,6 @@ namespace TicTacToe
         {
             Map = new Map(size);
             SetRandomBrickTurn();
-        }
-
-        private void SetRandomBrickTurn()
-        {
-            Random random = new Random();
-
-            if (random.Next(0, 1) == 0)
-                BrickTurn = Brick.Type.Cross;
-            else
-                BrickTurn = Brick.Type.Circle;
         }
 
         public void Reset()
@@ -51,6 +41,15 @@ namespace TicTacToe
                 else
                     BrickTurn = Brick.Type.Circle;
             }
+        }
+        private void SetRandomBrickTurn()
+        {
+            Random random = new Random();
+
+            if (random.Next(0, 1) == 0)
+                BrickTurn = Brick.Type.Cross;
+            else
+                BrickTurn = Brick.Type.Circle;
         }
 
         public string GetWinMessage()
