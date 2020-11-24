@@ -21,11 +21,12 @@ class Program
 
         while (true)
         {
-            ConsoleEx.WriteLine("- Game libary\n");
+            ConsoleEx.WriteLine("- Game libary\n", Color.Purple);
 
             for (int i = 0; i < games.Length; i++)
             {
-                ConsoleEx.WriteLine("PRESS '" + (char)('A' + i) + "' TO PLAY " + games[i].Name);
+                ConsoleEx.Write("PRESS '" + (char)('A' + i) + "' TO PLAY ");
+                ConsoleEx.WriteLine(games[i].Name, Color.Teal);
 
                 if (Input.KeyPressed((Key)('A' + i)))
                 {
@@ -33,6 +34,7 @@ class Program
                     UpdateWindow();
                 }
             }
+            ConsoleEx.WriteLine("\nPRESS 'ESCAPE' TO LEAVE GAME");
             ConsoleEx.Update();
             ConsoleEx.Clear();
         }

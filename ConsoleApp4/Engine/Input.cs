@@ -12,7 +12,14 @@ namespace Engine
         private const byte FIRST_PRESS = 2;
         private const byte IS_RELEASED = 3;
 
-        private static byte[] keyMap = new byte[255];
+        private enum InputState
+        {
+            Unlocked = 0,
+            Triggered,
+            Locked,
+        }
+
+        private static InputState[] keyMap = new InputState[255];
 
         /// <summary>
         /// Gets keystate for a virtual key
@@ -40,16 +47,18 @@ namespace Engine
         /// <returns>true if key is pressed</returns>
         public static bool KeyPressed(Key key)
         {
-            if ((GetAsyncKeyState((short)key) >= 0x8000) && (keyMap[(short)key] == NOT_PRESSED))
-                keyMap[(short)key] = FIRST_PRESS;
-
-            if (keyMap[(short)key] == FIRST_PRESS)
+            if (KeyState(key))
             {
-                keyMap[(short)key] = IS_PRESSED;
-                return true;
+                if (keyMap[(short)key] != InputState.Locked)
+                {
+                    keyMap[(short)key] = InputState.Triggered;
+                    return true;
+                }
             }
-            if (GetAsyncKeyState((short)key) == 0)
-                keyMap[(short)key] = NOT_PRESSED;
+            else
+            {
+                keyMap[(short)key] = InputState.Unlocked;
+            }
             return false;
         }
         public static bool KeyAnyPressed()
@@ -67,18 +76,18 @@ namespace Engine
         /// <returns>true if key is released</returns>
         public static bool KeyReleased(Key key)
         {
-            if ((GetAsyncKeyState((short)key) >= 0x8000) && (keyMap[(short)key] == NOT_PRESSED))
-                keyMap[(short)key] = IS_PRESSED;
+            //if ((GetAsyncKeyState((short)key) >= 0x8000) && (keyMap[(short)key] == NOT_PRESSED))
+            //    keyMap[(short)key] = IS_PRESSED;
 
-            if ((GetAsyncKeyState((short)key) == 0) && (keyMap[(short)key] == IS_PRESSED))
-                keyMap[(short)key] = IS_RELEASED;
+            //if ((GetAsyncKeyState((short)key) == 0) && (keyMap[(short)key] == IS_PRESSED))
+            //    keyMap[(short)key] = IS_RELEASED;
 
 
-            if (keyMap[(short)key] == IS_RELEASED)
-            {
-                keyMap[(short)key] = NOT_PRESSED;
-                return true;
-            }
+            //if (keyMap[(short)key] == IS_RELEASED)
+            //{
+            //    keyMap[(short)key] = NOT_PRESSED;
+            //    return true;
+            //}
             return false;
         }
         public static bool KeyAnyReleased()
@@ -88,7 +97,6 @@ namespace Engine
                     return true;
             return false;
         }
-
 
         /// <summary>
         /// Reads string
@@ -118,6 +126,15 @@ namespace Engine
                 return text + '\n';
 
             return text;
+        }
+
+        internal static void Update()
+        {
+            for (int i = 0; i < keyMap.Length; i++)
+            {
+                if (keyMap[i] == InputState.Triggered)
+                    keyMap[i] = InputState.Locked;
+            }
         }
     }
     public enum Key

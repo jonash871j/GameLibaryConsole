@@ -355,6 +355,8 @@ namespace Engine
             GetConsoleScreenBufferInfoEx(hConsoleOutput, ref csbiInfo);
             SetConsoleSize();
             SetConsoleScreenBufferInfoEx(hConsoleOutput, ref csbiInfo);
+
+            Input.Update();
         }
 
         /// <summary>
@@ -463,12 +465,6 @@ namespace Engine
                 {
                     WriteLine();
                     offset = 0;
-                    continue;
-                }
-
-                if (textArray[i] == ' ')
-                {
-                    offset++;
                     continue;
                 }
 

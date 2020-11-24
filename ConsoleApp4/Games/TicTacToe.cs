@@ -6,6 +6,9 @@ namespace Games
     public class TicTacToe : Game
     {
         private GameManager game = new GameManager(size: 3);
+        private Sprite sprCross = new Sprite("Sprite/ttt_cross.ascspr");
+        private Sprite sprCircle = new Sprite("Sprite/ttt_circle.ascspr");
+        private Sprite sprCursor = new Sprite("Sprite/ttt_cursor.ascspr");
         private int xCus = 0, yCus = 0;
 
         public TicTacToe() 
@@ -13,45 +16,22 @@ namespace Games
         {
         }
 
-        void DrawX(int x, int y)
-        {
-            ConsoleEx.WriteCoord(x * 5 + 6, y * 5);
-            ConsoleEx.WriteLine("X   X", 0xc);
-            ConsoleEx.WriteLine(" X X ", 0xc);
-            ConsoleEx.WriteLine("  X  ", 0xc);
-            ConsoleEx.WriteLine(" X X ", 0xc);
-            ConsoleEx.WriteLine("X   X", 0xc);
-        }
-        private void DrawO(int x, int y)
-        {
-            ConsoleEx.WriteCoord(x * 5 + 6, y * 5);
-            ConsoleEx.WriteLine(" OOO ", 0x9);
-            ConsoleEx.WriteLine("O   O", 0x9);
-            ConsoleEx.WriteLine("O   O", 0x9);
-            ConsoleEx.WriteLine("O   O", 0x9);
-            ConsoleEx.WriteLine(" OOO ", 0x9);
-        }
-        private void DrawCursor(int x, int y)
-        {
-            ConsoleEx.WriteCoord(x * 5 + 6, y * 5);
-            ConsoleEx.WriteLine("■ ■ ■", 0xa);
-            ConsoleEx.WriteLine("     ", 0xa);
-            ConsoleEx.WriteLine("■   ■", 0xa);
-            ConsoleEx.WriteLine("     ", 0xa);
-            ConsoleEx.WriteLine("■ ■ ■", 0xa);
-        }
         private void DrawMap(Map map)
         {
+            // Draws map
             for (int x = 0; x < map.Size; x++)
             {
                 for (int y = 0; y < map.Size; y++)
                 {
                     if (map.MapArray[x, y].BrickType == Brick.Type.Cross)
-                        DrawX(x, y);
+                        Draw.Sprite(x * 5 + 6, y * 5, sprCross);
                     else if (map.MapArray[x, y].BrickType == Brick.Type.Circle)
-                        DrawO(x, y);
+                        Draw.Sprite(x * 5 + 6, y * 5, sprCircle);
                 }
             }
+
+            // Draws cursor
+            Draw.Sprite(xCus * 5 + 6, yCus * 5, sprCursor);
         }
         private void DrawHud()
         {
@@ -100,7 +80,6 @@ namespace Games
                 UserInput();
 
                 DrawMap(game.Map);
-                DrawCursor(xCus, yCus);
                 DrawHud();
 
                 ConsoleEx.Update();

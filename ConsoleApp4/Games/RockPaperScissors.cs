@@ -1,5 +1,6 @@
 ﻿using Engine;
 using RockPaperScissorsLogic;
+using System.Threading;
 
 namespace Games
 {
@@ -38,14 +39,31 @@ namespace Games
             ConsoleEx.WriteCoord(0, 21);
             ConsoleEx.WriteLine(game.GetWinMessage());
 
-            ConsoleEx.WriteCoord(1, 24);
-            ConsoleEx.WriteLine("R: Use ROCK");
-            ConsoleEx.WriteLine("S: USE SCISSORS");
-            ConsoleEx.WriteLine("P: USE PAPER");
+            Draw.Line(ConsoleEx.Width / 2, 0, ConsoleEx.Width / 2, ConsoleEx.Height, '│');
+
+            ConsoleEx.WriteCoord(2, 24);
+            if (game.CheckWin() == WinType.None)
+            {
+                ConsoleEx.WriteLine("R: Use ROCK");
+                ConsoleEx.WriteLine("S: Use SCISSORS");
+                ConsoleEx.WriteLine("P: Use PAPER");
+            }
+            else
+            {
+                ConsoleEx.WriteLine("ANY KEY: Reset");
+            }
         }
 
         private void UserInput()
         {
+            if (Input.KeyAnyPressed())
+            {
+                if (game.CheckWin() != WinType.None)
+                {
+                    game.Reset();
+                    return;
+                }
+            }
             if (Input.KeyPressed((Key)'R'))
             {
                 game.SetMove(Move.Rock);
@@ -71,8 +89,6 @@ namespace Games
 
                 DrawCharacters();
                 DrawHud();
-
-            
 
                 ConsoleEx.Update();
                 ConsoleEx.Clear();
