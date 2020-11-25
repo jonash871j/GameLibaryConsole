@@ -20,6 +20,7 @@ namespace Engine
         }
 
         private static InputState[] keyMap = new InputState[255];
+        private static int[] keyCounter = new int[255];
 
         /// <summary>
         /// Gets keystate for a virtual key
@@ -30,7 +31,29 @@ namespace Engine
         {
             if (GetAsyncKeyState((short)key) >= 0x8000)
                 return true;
-            else return false;
+            else 
+                return false;
+        }
+        public static bool KeyStateDelayed(Key key, int delay)
+        {
+            keyCounter[(int)key]++;
+ 
+            if (KeyPressed(key))
+            {
+                return true;
+            }
+            else if (KeyState(key))
+            {
+                if((keyCounter[(int)key] % delay) == 0)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                keyCounter[(int)key] = 0;
+            }
+            return false;
         }
         public static bool KeyAnyState()
         {

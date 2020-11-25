@@ -16,20 +16,26 @@ namespace Games
             new Sprite("./Sprite/t_tetrominoPurple.ascspr"),
             new Sprite("./Sprite/t_tetrominoRed.ascspr"),
         };
+        private Sprite sprGhost = new Sprite("./Sprite/t_ghost.ascspr");
 
         public Tetris()
             : base("Tetris")
         {
         }
 
-        void DrawTetromino(Tetromino tetromino, int xOff, int yOff)
+        void DrawTetromino(Tetromino tetromino, Sprite sprite, int xOff, int yOff, bool useTetrominoCoord = true)
         {
             for (int y = 0; y < tetromino.Height; y++)
             {
                 for (int x = 0; x < tetromino.Width; x++)
                 {
                     if (tetromino[x, y] != Field.Empty)
-                        Draw.Sprite((x * 3) + (tetromino.X * 3) + xOff, (y * 3) + (tetromino.Y * 3) + yOff, sprTetrominos[(int)tetromino.FieldType]);
+                    {
+                        if (useTetrominoCoord)
+                            Draw.Sprite((x * 3) + (tetromino.X * 3) + xOff, (y * 3) + (tetromino.Y * 3) + yOff, sprite);
+                        else
+                            Draw.Sprite((x * 3) + xOff, (y * 3) + yOff, sprite);
+                    }
                 }
             }
             ConsoleEx.WriteLine(tetromino.X.ToString());
@@ -50,28 +56,30 @@ namespace Games
                 }
             }
         }
-
-
+        void DrawContainer(Container container, int xOff, int yOff)
+        {
+            Draw.Rectangle(xOff-2, yOff-2, 13 + xOff, 13 + yOff, true, '█', Color.White);
+            DrawTetromino(container.Tetromino, sprTetrominos[(int)container.Tetromino.FieldType], xOff, yOff, false);
+        }
         private void UserInput()
         {
-            if (Input.KeyPressed((Key)'R'))
-                game.PickRandom();
-
-            if (Input.KeyPressed(Key.LEFT))
+            if (Input.KeyStateDelayed(Key.LEFT, 35))
                 game.Transform(x: Direction.Backward, y: Direction.None);
 
-            if (Input.KeyPressed(Key.RIGHT))
+            if (Input.KeyStateDelayed(Key.RIGHT, 35))
                 game.Transform(x: Direction.Forward, y: Direction.None);
 
             if (Input.KeyPressed(Key.UP))
                 game.Rotate(Direction.Forward);
 
-            if (Input.KeyPressed(Key.DOWN))
+            if (Input.KeyStateDelayed(Key.DOWN, 35))
                 game.Transform(x: Direction.None, y: Direction.Forward);
-
 
             if (Input.KeyPressed(Key.SPACE))
                 game.Warp();
+
+            if ((Input.KeyPressed(Key.NUMPAD0)) || (Input.KeyPressed(Key.INSERT)) || (Input.KeyPressed(Key.RETURN)))
+                game.Hold();
         }
 
         public override void Play()
@@ -80,16 +88,23 @@ namespace Games
             ConsoleEx.SetFont("Terminal", 8, 8);
             ConsoleEx.SetColorPalette(new ColorPalette("./Color/tetris.accpal"));
 
+            game.IsPaused = false;
+
             while (!Input.KeyPressed(Key.ESCAPE))
             {
                 UserInput();
 
-                DrawTetromino(game.Controller, 32, 2);
+                DrawTetromino(game.Ghost, sprGhost, 32, 2);
+                DrawTetromino(game.Controller, sprTetrominos[(int)game.Controller.FieldType], 32, 2);
+                DrawContainer(game.HoldContainer, 17, 4);
+                DrawContainer(game.NextContainer, game.Map.Width * 3 + 35, 4);
                 DrawMap(game.Map, 32, 2);
 
                 ConsoleEx.Update();
                 ConsoleEx.Clear();
             }
+
+            game.IsPaused = true;
         }
     }
 }

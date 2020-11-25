@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TetrisLogic
 {
@@ -14,6 +12,7 @@ namespace TetrisLogic
 
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public string Pattern { get; private set; }
         public Field FieldType { get; private set; }
         public Field this[int x, int y]
         {
@@ -40,6 +39,7 @@ namespace TetrisLogic
             Width = width;
             Height = height;
             FieldType = fieldType;
+            Pattern = pattern;
             array = new Field[Width * Height];
 
             // Check if mismatch between tetromino data and size
@@ -59,7 +59,11 @@ namespace TetrisLogic
             }
         }
 
-        public bool CheckInbound(int x, int y)
+        /// <summary>
+        /// Used to check if coordinate is inbound of tetromino
+        /// </summary>
+        /// <returns>false when out of bound</returns>
+        private bool CheckInbound(int x, int y)
         {
             if ((x < 0) || (y < 0) || (x >= Width) || (y >= Height))
                 return false;
@@ -67,12 +71,20 @@ namespace TetrisLogic
                 return true;
         }
 
+        /// <summary>
+        /// Used to reset tetromino
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void Reset(int x, int y)
         {
             X = x;
             Y = y;
         }
 
+        /// <summary>
+        /// Used to rotate tetromino
+        /// </summary>
         public void Rotate(Direction direction)
         {
             Rotation += (int)direction * 90;
@@ -80,12 +92,19 @@ namespace TetrisLogic
             if (Rotation < 0)   Rotation = 270;
             if (Rotation > 270) Rotation = 0;
         }
+
+        /// <summary>
+        /// Used to move tetromino
+        /// </summary>
         public void Transform(Direction x, Direction y)
         {
             X += (int)x;
             Y += (int)y;
         }
 
+        /// <summary>
+        /// Used to clone current tetromino
+        /// </summary>
         public Tetromino Clone()
         {
             return (Tetromino)this.MemberwiseClone();

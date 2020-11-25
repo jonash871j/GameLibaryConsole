@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Timers;
 
 namespace TetrisLogic
 {
@@ -27,14 +26,30 @@ namespace TetrisLogic
     public class GameManager
     {
         private Random random = new Random();
+        private Timer timer;
+        private bool isTransformDownMade = false;
+        private bool isNewHoldMade = false;
 
         public Map Map { get; private set; }
         public Tetromino[] Tetrominos { get; private set; }
         public Tetromino Controller { get; private set; }
-        
+        public Tetromino Ghost { get; private set; }
+        public Container HoldContainer { get; private set; }
+        public Container NextContainer { get; private set; }
+        public bool IsPaused { get; set; }
 
-        public GameManager(int width = 10, int height = 21)
+        /// <summary>
+        /// Used to create a game of tetris
+        /// </summary>
+        /// <param name="timerInterval">in milliseconds</param>
+        /// <param name="width">width of the map</param>
+        /// <param name="height">height of the map</param>
+        public GameManager(int timerInterval = 500, int width = 10, int height = 21)
         {
+            timer = new Timer(timerInterval);
+            timer.Elapsed += OnTimedEvent;
+            timer.Enabled = true;
+
             Map = new Map(width, height);
             Tetrominos = new Tetromino[]
             {
@@ -47,16 +62,78 @@ namespace TetrisLogic
                 new Tetromino("..X..XX..X......", Field.Red),
             };
 
-            Controller = Tetrominos[0].Clone();
-        }
-
-        public void PickRandom()
-        {
-            Controller = Tetrominos[random.Next(0, Tetrominos.Length)].Clone();
+            Reset();
         }
 
         /// <summary>
-        /// Rotates the controller tetromino
+        /// Used to update ghost position
+        /// </summary>
+        private void UpdateGhost()
+        {
+            Ghost = Controller.Clone();
+
+            Tetromino test = Ghost;
+
+            while (!Map.CheckPlaceCollision(test))
+            {
+                Ghost = test;
+                test = Ghost.Clone();
+                test.Transform(0, Direction.Forward);
+            }
+        }
+
+        /// <summary>
+        /// Used to move tetromino controller on each timed inteval
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            if (!IsPaused)
+            {
+                if (!isTransformDownMade)
+                    Transform(Direction.None, Direction.Forward);
+
+                isTransformDownMade = false;
+            }
+        }
+
+        /// <summary>
+        /// Picks next tetromino for controler 
+        /// </summary>
+        private void Next()
+        {
+            Tetromino randomTetromino = Tetrominos[random.Next(0, Tetrominos.Length)].Clone();
+
+            if (NextContainer.IsEmpty)
+            {
+                NextContainer.Swap(randomTetromino);
+                Next();
+            }
+            else
+            {
+                Controller = NextContainer.Swap(randomTetromino);
+                Controller.Reset(Map.Width / 2 - 2, -Controller.Height);
+                UpdateGhost();
+            }
+        }
+
+        /// <summary>
+        /// Used to reset the game
+        /// </summary>
+        public void Reset()
+        {
+            isNewHoldMade = false;
+
+            HoldContainer = new Container();
+            NextContainer = new Container();
+            Map.Clear();
+
+            Next();
+        }
+
+        /// <summary>
+        /// Used to rotate the tetromino controller
         /// </summary>
         /// <returns>if the rotation was successful</returns>
         public bool Rotate(Direction direction)
@@ -64,9 +141,10 @@ namespace TetrisLogic
             Tetromino test = Controller.Clone();
             test.Rotate(direction);
 
-            if (!Map.CheckTetrominoCollision(test))
+            if ((!Map.CheckPlaceCollision(test)) && (!Map.CheckWallCloision(test)))
             {
                 Controller = test;
+                UpdateGhost();
                 return true;
             }
 
@@ -74,7 +152,7 @@ namespace TetrisLogic
         }
 
         /// <summary>
-        /// Moves the controller tetromino
+        /// Used to move the tetromino controller
         /// </summary>
         /// <returns>if the transform was successful</returns>
         public bool Transform(Direction x, Direction y)
@@ -82,24 +160,54 @@ namespace TetrisLogic
             Tetromino test = Controller.Clone();
             test.Transform(x, y);
             
-            if ((y != Direction.None) && (Map.CheckTetrominoCollision(test)))
+            if (y != Direction.None)
             {
-                Map.PlaceTetromino(Controller);
-                return false;
+                isTransformDownMade = true;
+
+                if (Map.CheckPlaceCollision(test))
+                {
+                    isNewHoldMade = false;
+                    Map.PlaceTetromino(Controller);
+                    Next();
+                    return false;
+                }
             }
 
-            if (!Map.CheckTetrominoCollision(test))
+            if ((!Map.CheckPlaceCollision(test)) && (!Map.CheckWallCloision(test)))
                 Controller = test;
+
+            UpdateGhost();
 
             return true;
         }
 
         /// <summary>
-        /// Warps the controller tetromino until somthing is hit
+        /// Used to warp the tetromino controller until somthing is hit
         /// </summary>
         public void Warp()
         {
             while (Transform(Direction.None, Direction.Forward)) ;
+        }
+
+        /// <summary>
+        /// Used to swap controler with hold container
+        /// </summary>
+        public void Hold()
+        {
+            if (!isNewHoldMade)
+            {
+                if (HoldContainer.IsEmpty)
+                {
+                    HoldContainer.Swap(Controller);
+                    Next();
+                }
+                else
+                {
+                    Controller = HoldContainer.Swap(Controller);
+                    Controller.Reset(Map.Width / 2 - 2, -Controller.Height);
+                }
+            }
+            isNewHoldMade = true;
         }
     }
 }

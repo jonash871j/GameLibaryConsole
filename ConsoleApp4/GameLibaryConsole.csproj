@@ -42,6 +42,9 @@
     <None Update="Sprite\ttt_cursor.ascspr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Sprite\t_ghost.ascspr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Sprite\t_tetrominoBlue.acxspr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

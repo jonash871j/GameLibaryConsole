@@ -8,6 +8,7 @@ class Program
     {
         ConsoleEx.Create(64, 32);
         ConsoleEx.SetFont("Terminal", 16, 16);
+        ConsoleEx.SetColorPalette(new ColorPalette("./Color/default.accpal"));
     }
 
     static void Main(string[] args)
@@ -27,7 +28,8 @@ class Program
 
             for (int i = 0; i < games.Length; i++)
             {
-                ConsoleEx.WriteLine("PRESS '" + (char)('A' + i) + "' TO PLAY " + games[i].Name);
+                ConsoleEx.Write("PRESS '" + (char)('A' + i) + "' TO PLAY ");
+                ConsoleEx.WriteLine(games[i].Name, Color.Sky);
 
                 if (Input.KeyPressed((Key)('A' + i)))
                 {
