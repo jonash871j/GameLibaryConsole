@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using System;
+using Engine;
 using Games;
 
 class Program
@@ -15,18 +16,18 @@ class Program
         {
             new TicTacToe(),
             new RockPaperScissors(),
+            new Tetris(),
         };
 
         UpdateWindow();
 
         while (true)
         {
-            ConsoleEx.WriteLine("- Game libary\n", Color.Purple);
+            ConsoleEx.WriteLine("- Game libary\n");
 
             for (int i = 0; i < games.Length; i++)
             {
-                ConsoleEx.Write("PRESS '" + (char)('A' + i) + "' TO PLAY ");
-                ConsoleEx.WriteLine(games[i].Name, Color.Teal);
+                ConsoleEx.WriteLine("PRESS '" + (char)('A' + i) + "' TO PLAY " + games[i].Name);
 
                 if (Input.KeyPressed((Key)('A' + i)))
                 {
@@ -34,7 +35,6 @@ class Program
                     UpdateWindow();
                 }
             }
-            ConsoleEx.WriteLine("\nPRESS 'ESCAPE' TO LEAVE GAME");
             ConsoleEx.Update();
             ConsoleEx.Clear();
         }

@@ -1,6 +1,5 @@
 ﻿using Engine;
 using RockPaperScissorsLogic;
-using System.Threading;
 
 namespace Games
 {

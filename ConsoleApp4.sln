@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe", "TicTacToe\TicT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe in WPF", "TicTacToe in WPF\TicTacToe in WPF.csproj", "{5CF67CD8-63AC-4DB7-975C-CB4EC89AFDC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors", "RockPaperScissors\RockPaperScissors.csproj", "{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors", "RockPaperScissors\RockPaperScissors.csproj", "{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tetris", "Tetris\Tetris.csproj", "{9D1FA05B-3B81-4F96-8A50-9031A07841E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{424A4EF7-EB4B-4215-9B85-4372E0DE64F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D1FA05B-3B81-4F96-8A50-9031A07841E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D1FA05B-3B81-4F96-8A50-9031A07841E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D1FA05B-3B81-4F96-8A50-9031A07841E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D1FA05B-3B81-4F96-8A50-9031A07841E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

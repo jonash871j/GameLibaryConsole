@@ -41,7 +41,6 @@ namespace Engine
         {
             Path = path;
 
-
             string extension = System.IO.Path.GetExtension(path);
 
             switch (extension)
