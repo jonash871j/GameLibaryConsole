@@ -20,18 +20,7 @@ namespace TetrisLogic
         {
             get
             {
-                if (CheckInbound(x, y))
-                {
-                    switch(Rotation)
-                    {
-                    case 90: return array[(Size - Height) + y - (x * Width)];
-                    case 180: return array[(Size - 1) - (y * Height) - x];
-                    case 270: return array[(Width - 1) - y + (x * Width)];
-                    default: return array[y * Width + x];
-                    }
-                }
-                else
-                    return Field.Empty;
+                return GetField(Rotation, x, y);
             }
         }
 
@@ -114,6 +103,21 @@ namespace TetrisLogic
         public Tetromino Clone()
         {
             return (Tetromino)this.MemberwiseClone();
+        }
+
+        public Field GetField(int rotation, int x, int y)
+        {
+            if (CheckInbound(x, y))
+            {
+                switch (rotation)
+                {
+                case 90 : return array[(Size - Height) + y - (x * Width)];
+                case 180: return array[(Size - 1) - (y * Height) - x];
+                case 270: return array[(Width - 1) - y + (x * Width)];
+                default : return array[y * Width + x];
+                }
+            }
+            return Field.Empty;
         }
     }
 }

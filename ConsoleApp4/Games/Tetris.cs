@@ -5,77 +5,35 @@ namespace Games
 {
     public class Tetris : Game
     {
-        private GameManager game;
-        private Sprite[] sprTetrominos;
-        private Sprite sprGhost;
+        private GameManager game = new GameManager();
+        private byte[] colorMap =
+        {
+            Color.Get(0xb, 0x3),
+            Color.Get(0x9, 0x1),
+            Color.Get(0xe, 0x6),
+            Color.Get(0x7, 0x8),
+            Color.Get(0xa, 0x2),
+            Color.Get(0xd, 0x5),
+            Color.Get(0xc, 0x4),
+         };
 
         public Tetris()
             : base("Tetris")
         {
-            game = new GameManager();
-            sprGhost = new Sprite("./Sprite/t_ghost.ascspr");
-            sprTetrominos = new Sprite[]
-            {
-                new Sprite("./Sprite/t_tetrominoCyan.ascspr"),
-                new Sprite("./Sprite/t_tetrominoBlue.ascspr"),
-                new Sprite("./Sprite/t_tetrominoOrange.ascspr"),
-                new Sprite("./Sprite/t_tetrominoYellow.ascspr"),
-                new Sprite("./Sprite/t_tetrominoGreen.ascspr"),
-                new Sprite("./Sprite/t_tetrominoPurple.ascspr"),
-                new Sprite("./Sprite/t_tetrominoRed.ascspr"),
-            };
         }
 
-        void DrawTetromino(Tetromino tetromino, Sprite sprite, int xOff, int yOff, bool useTetrominoCoord = true)
-        {
-            for (int y = 0; y < tetromino.Height; y++)
-            {
-                for (int x = 0; x < tetromino.Width; x++)
-                {
-                    if (tetromino[x, y] != Field.Empty)
-                    {
-                        if (useTetrominoCoord)
-                            Draw.Sprite((x * 3) + (tetromino.X * 3) + xOff, (y * 3) + (tetromino.Y * 3) + yOff, sprite);
-                        else
-                            Draw.Sprite((x * 3) + xOff, (y * 3) + yOff, sprite);
-                    }
-                }
-            }
-        }
-        void DrawMap(Map map, int xOff, int yOff)
-        {
-            Draw.Rectangle(xOff-2, yOff-2, map.Width * 3 + xOff+1, map.Height * 3 + yOff+1, true, '█', Color.White);
-                        DrawContainer(game.HoldContainer, xOff - 15, yOff + 4);
-            DrawContainer(game.NextContainer, game.Map.Width * 3 + xOff + 3, yOff + 4);
-
-            for (int y = 0; y < map.Height; y++)
-            {
-                for (int x = 0; x < map.Width; x++)
-                {
-                    if ((map[x, y] != Field.Empty) && (map[x, y] != Field.Out))
-                    {
-                        Draw.Sprite(x * 3 + xOff, y * 3 + yOff, sprTetrominos[(int)map[x, y]]);
-                    }
-                }
-            }
-        }
-        void DrawContainer(Container container, int xOff, int yOff)
-        {
-            Draw.Rectangle(xOff-2, yOff-2, 13 + xOff, 13 + yOff, true, '█', Color.White);
-            DrawTetromino(container.Tetromino, sprTetrominos[(int)container.Tetromino.FieldType], xOff, yOff, false);
-        }
         private void UserInput()
         {
-            if (Input.KeyStateDelayed(Key.LEFT, 35))
+            if (Input.KeyPressed(Key.LEFT))
                 game.Transform(x: Direction.Backward, y: Direction.None);
 
-            if (Input.KeyStateDelayed(Key.RIGHT, 35))
+            if (Input.KeyPressed(Key.RIGHT))
                 game.Transform(x: Direction.Forward, y: Direction.None);
 
             if (Input.KeyPressed(Key.UP))
                 game.Rotate(Direction.Forward);
 
-            if (Input.KeyStateDelayed(Key.DOWN, 35))
+            if (Input.KeyStateDelayed(Key.DOWN, 200))
                 game.Transform(x: Direction.None, y: Direction.Forward);
 
             if (Input.KeyPressed(Key.SPACE))
@@ -85,10 +43,105 @@ namespace Games
                 game.Hold();
         }
 
+        private void DrawBorder(int x1, int y1, int x2, int y2)
+        {
+            Draw.Line(x1, y1, x1, y2, '│', Color.White);
+            Draw.Line(x2, y1, x2, y2, '│', Color.White);
+            Draw.Line(x1, y1, x2, y1, '─', Color.White);
+            Draw.Line(x1, y2, x2, y2, '─', Color.White);
+            ConsoleEx.WriteCharacter(x1, y1, '┌', Color.White);
+            ConsoleEx.WriteCharacter(x2, y1, '┐', Color.White);
+            ConsoleEx.WriteCharacter(x1, y2, '└', Color.White);
+            ConsoleEx.WriteCharacter(x2, y2, '┘', Color.White);
+        }
+
+        private void DrawTetromino(Tetromino tetromino, ushort character, byte color, int xOff, int yOff, bool useTetrominoProperties = true)
+        {
+            for (int y = 0; y < tetromino.Height; y++)
+            {
+                for (int x = 0; x < tetromino.Width; x++)
+                {
+                    if (useTetrominoProperties)
+                    {
+                        if (tetromino[x, y] != Field.Empty)
+                        {
+                            if (y + tetromino.Y < 0)
+                                continue;
+
+                            ConsoleEx.WriteCharacter(x + tetromino.X + xOff, y + tetromino.Y + yOff, character, color);
+                        }
+                    }
+                    else
+                    {
+                        if (tetromino.GetField(270, x, y) != Field.Empty)
+                        {
+                            ConsoleEx.WriteCharacter(x + xOff, y + yOff, character, color);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DrawContainer(Container container, int xOff, int yOff)
+        {
+            DrawBorder(xOff-1, yOff-1, xOff + 4, yOff + 4);
+            DrawTetromino(
+                container.Tetromino, 
+                '■', 
+                colorMap[(int)container.Tetromino.FieldType], 
+                xOff + (4 / container.Tetromino.Width) - 1, 
+                yOff + (4 / container.Tetromino.Height) - 1, 
+                false
+            );
+        }
+
+        private void DrawPlayer(int xOff, int yOff)
+        {
+            DrawTetromino(game.Ghost, '▒', 0xf, xOff, yOff);
+            DrawTetromino(game.Controller, '■', colorMap[(int)game.Controller.FieldType], xOff, yOff);
+        }
+
+        private void DrawMap(int xOff, int yOff)
+        {
+            Map map = game.Map;
+
+            DrawContainer(game.HoldContainer, xOff - 1 - 4, yOff + 2);
+            DrawContainer(game.NextContainer, xOff + map.Width + 1, yOff + 2);
+            DrawBorder(xOff - 1, yOff - 1, map.Width + xOff, map.Height + yOff);
+
+            for (int y = 0; y < map.Height; y++)
+            {
+                for (int x = 0; x < map.Width; x++)
+                {
+                    if ((map[x, y] != Field.Empty) && (map[x, y] != Field.Out))
+                    {
+                        ConsoleEx.WriteCharacter(xOff + x, yOff + y, '■', colorMap[(int)map[x, y]]);
+                    }
+                }
+            }
+        }
+
+        private void DrawHud(int xOff, int yOff)
+        {
+            ConsoleEx.WriteCoord(xOff, yOff + 22);
+            ConsoleEx.WriteLine("SCORE", 0xf);
+            ConsoleEx.WriteLine(game.Score.ToString("D10"), 0x7);
+        }
+
+        private void DrawGame(int xOff, int yOff)
+        {
+            DrawMap(xOff, yOff);
+            DrawPlayer(xOff, yOff);
+            DrawHud(xOff, yOff);
+
+            ConsoleEx.Update();
+            ConsoleEx.Clear();
+        }
+
         public override void Play()
         {
-            ConsoleEx.Create(128, 80);
-            ConsoleEx.SetFont("Terminal", 8, 8);
+            ConsoleEx.Create(42, 26);
+            ConsoleEx.SetFont("Terminal", 40, 40);
             ConsoleEx.SetColorPalette(new ColorPalette("./Color/tetris.accpal"));
 
             game.IsPaused = false;
@@ -96,16 +149,7 @@ namespace Games
             while (!Input.KeyPressed(Key.ESCAPE))
             {
                 UserInput();
-
-                DrawTetromino(game.Ghost, sprGhost, 32, 2);
-                DrawTetromino(game.Controller, sprTetrominos[(int)game.Controller.FieldType], 32, 2);
-                DrawMap(game.Map, 32, 2);
-            
-                ConsoleEx.WriteCoord(32, 75);
-                ConsoleEx.WriteLine(game.Score.ToString());
-
-                ConsoleEx.Update();
-                ConsoleEx.Clear();
+                DrawGame(17, 2);
             }
 
             game.IsPaused = true;

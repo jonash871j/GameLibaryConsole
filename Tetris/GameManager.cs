@@ -169,10 +169,19 @@ namespace TetrisLogic
 
                 if (Map.CheckPlaceCollision(test))
                 {
-                    isNewHoldMade = false;
-                    Map.PlaceTetromino(Controller);
-                    Score += Map.ClearLines() * 100;
-                    Next();
+                    // Checks for lose
+                    if (Controller.Y < 0)
+                    {
+                        Reset();
+                    }
+                    else // Place tetromino
+                    {
+                        isNewHoldMade = false;
+                        Map.PlaceTetromino(Controller);
+                        Score += Map.ClearLines() * 100;
+                        Next();
+
+                    }
                     return false;
                 }
             }
