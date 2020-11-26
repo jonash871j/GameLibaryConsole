@@ -34,7 +34,7 @@ namespace Engine
 			{
 				for (int x = 0; x < tileMap.Width; x++)
 				{
-					Sprite sprite = tileMap.Sprites[tileMap.IdMap[y, x]];
+					Sprite sprite = tileMap.Sprites[(int)tileMap.IdMap[y, x]];
 
 					if (sprite != null)
 						Sprite(x1 + (x * tileMap.TileWidth), y1 + (y * tileMap.TileHeight), sprite);

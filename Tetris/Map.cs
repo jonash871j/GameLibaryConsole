@@ -6,6 +6,13 @@
 
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public Field[,] Array
+        {
+            get
+            {
+                return array;
+            }
+        }
         public Field this[int x, int y]
         {
             get 
@@ -52,6 +59,20 @@
                 return false;
             else
                 return true;
+        }
+
+        /// <summary>
+        /// Used to push all fields one down
+        /// </summary>
+        private void PushDown(int yStart)
+        {
+            for (int y = yStart; y >= 0; y--)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    this[x, y] = this[x, y - 1];
+                }
+            }
         }
 
         /// <summary>
@@ -131,8 +152,35 @@
                         this[x + tetromino.X, y + tetromino.Y] = tetromino[x, y];
                 }
             }
-
             tetromino.Reset(Width / 2 - 2, -4);
+        }
+
+        /// <summary>
+        /// Used to clear all lines
+        /// </summary>
+        /// <returns>amount of lines cleared</returns>
+        public int ClearLines()
+        {
+            int lines = 0;
+            for (int y = 0; y < Height; y++)
+            {
+                int count = 0;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (!CheckSolidField(x, y))
+                        break;
+
+                    count++;
+                }
+
+                if (count == Width)
+                {
+                    PushDown(y);
+                    lines++;
+                }
+            }
+
+            return lines;
         }
     }
 }

@@ -6,10 +6,12 @@ namespace TetrisLogic
     {
         private Field[] array;
 
-        public int Rotation { get; set; }
+        public int Rotation { get; set; } = 270;
+        public int ResetRotation { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
 
+        public int Size { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
         public string Pattern { get; private set; }
@@ -22,9 +24,9 @@ namespace TetrisLogic
                 {
                     switch(Rotation)
                     {
-                    case 90: return array[12 + y - (x * 4)];
-                    case 180: return array[15 - (y * 4) - x];
-                    case 270: return array[3 - y + (x * 4)];
+                    case 90: return array[(Size - Height) + y - (x * Width)];
+                    case 180: return array[(Size - 1) - (y * Height) - x];
+                    case 270: return array[(Width - 1) - y + (x * Width)];
                     default: return array[y * Width + x];
                     }
                 }
@@ -33,17 +35,20 @@ namespace TetrisLogic
             }
         }
 
-        public Tetromino(string pattern, Field fieldType, int width = 4, int height = 4)
+        public Tetromino(string pattern, Field fieldType, int resetRotation = 0, int width = 3, int height = 3)
         {
             // Sets properties
+            ResetRotation = resetRotation;
+            Rotation = resetRotation;
             Width = width;
             Height = height;
+            Size = Width * Height; 
             FieldType = fieldType;
             Pattern = pattern;
-            array = new Field[Width * Height];
+            array = new Field[Size];
 
             // Check if mismatch between tetromino data and size
-            if (pattern.Length != Width * Height)
+            if (pattern.Length != Size)
                 throw new Exception("Mismatch between tetromino data and size!");
 
             // Adds data to tetromino array
@@ -80,6 +85,7 @@ namespace TetrisLogic
         {
             X = x;
             Y = y;
+            Rotation = ResetRotation;
         }
 
         /// <summary>

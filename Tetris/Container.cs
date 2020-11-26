@@ -12,9 +12,9 @@ namespace TetrisLogic
             get
             {
                 if (tetromino != null)
-                    return new Tetromino(tetromino.Pattern, tetromino.FieldType);
+                    return new Tetromino(tetromino.Pattern, tetromino.FieldType, tetromino.ResetRotation, tetromino.Width, tetromino.Height);
                 else
-                    return new Tetromino("................", Field.Cyan);
+                    return new Tetromino(".........", Field.Cyan);
             } 
         }
         public bool IsEmpty { get; private set; } = true;
@@ -46,7 +46,6 @@ namespace TetrisLogic
                 this.tetromino = tetromino;
                 return oldTetromino;
             }
-   
         }
     }
 }

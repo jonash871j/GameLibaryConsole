@@ -5,22 +5,25 @@ namespace Games
 {
     public class Tetris : Game
     {
-        private GameManager game = new GameManager();
-        private Sprite[] sprTetrominos = new Sprite[]
-        {
-            new Sprite("./Sprite/t_tetrominoCyan.ascspr"),
-            new Sprite("./Sprite/t_tetrominoBlue.ascspr"),
-            new Sprite("./Sprite/t_tetrominoOrange.ascspr"),
-            new Sprite("./Sprite/t_tetrominoYellow.ascspr"),
-            new Sprite("./Sprite/t_tetrominoGreen.ascspr"),
-            new Sprite("./Sprite/t_tetrominoPurple.ascspr"),
-            new Sprite("./Sprite/t_tetrominoRed.ascspr"),
-        };
-        private Sprite sprGhost = new Sprite("./Sprite/t_ghost.ascspr");
+        private GameManager game;
+        private Sprite[] sprTetrominos;
+        private Sprite sprGhost;
 
         public Tetris()
             : base("Tetris")
         {
+            game = new GameManager();
+            sprGhost = new Sprite("./Sprite/t_ghost.ascspr");
+            sprTetrominos = new Sprite[]
+            {
+                new Sprite("./Sprite/t_tetrominoCyan.ascspr"),
+                new Sprite("./Sprite/t_tetrominoBlue.ascspr"),
+                new Sprite("./Sprite/t_tetrominoOrange.ascspr"),
+                new Sprite("./Sprite/t_tetrominoYellow.ascspr"),
+                new Sprite("./Sprite/t_tetrominoGreen.ascspr"),
+                new Sprite("./Sprite/t_tetrominoPurple.ascspr"),
+                new Sprite("./Sprite/t_tetrominoRed.ascspr"),
+            };
         }
 
         void DrawTetromino(Tetromino tetromino, Sprite sprite, int xOff, int yOff, bool useTetrominoCoord = true)
@@ -38,12 +41,12 @@ namespace Games
                     }
                 }
             }
-            ConsoleEx.WriteLine(tetromino.X.ToString());
-            ConsoleEx.WriteLine(tetromino.Y.ToString());
         }
         void DrawMap(Map map, int xOff, int yOff)
         {
             Draw.Rectangle(xOff-2, yOff-2, map.Width * 3 + xOff+1, map.Height * 3 + yOff+1, true, '█', Color.White);
+                        DrawContainer(game.HoldContainer, xOff - 15, yOff + 4);
+            DrawContainer(game.NextContainer, game.Map.Width * 3 + xOff + 3, yOff + 4);
 
             for (int y = 0; y < map.Height; y++)
             {
@@ -96,9 +99,10 @@ namespace Games
 
                 DrawTetromino(game.Ghost, sprGhost, 32, 2);
                 DrawTetromino(game.Controller, sprTetrominos[(int)game.Controller.FieldType], 32, 2);
-                DrawContainer(game.HoldContainer, 17, 4);
-                DrawContainer(game.NextContainer, game.Map.Width * 3 + 35, 4);
                 DrawMap(game.Map, 32, 2);
+            
+                ConsoleEx.WriteCoord(32, 75);
+                ConsoleEx.WriteLine(game.Score.ToString());
 
                 ConsoleEx.Update();
                 ConsoleEx.Clear();

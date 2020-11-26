@@ -36,7 +36,8 @@ namespace TetrisLogic
         public Tetromino Ghost { get; private set; }
         public Container HoldContainer { get; private set; }
         public Container NextContainer { get; private set; }
-        public bool IsPaused { get; set; }
+        public int Score { get; private set; }
+        public bool IsPaused { get; set; } = true;
 
         /// <summary>
         /// Used to create a game of tetris
@@ -53,13 +54,13 @@ namespace TetrisLogic
             Map = new Map(width, height);
             Tetrominos = new Tetromino[]
             {
-                new Tetromino(".X...X...X...X..", Field.Cyan),
-                new Tetromino("..X...X..XX.....", Field.Blue),
-                new Tetromino(".X...X...XX.....", Field.Orange),
-                new Tetromino(".....XX..XX.....", Field.Yellow),
-                new Tetromino(".X...XX...X.....", Field.Green),
-                new Tetromino(".X...XX..X......", Field.Purple),
-                new Tetromino("..X..XX..X......", Field.Red),
+                new Tetromino("....XXXX........", Field.Cyan, 90, 4, 4),
+                new Tetromino("...XXX..X", Field.Blue, 180),
+                new Tetromino("...XXXX..", Field.Orange, 180),
+                new Tetromino("XXXX", Field.Yellow, 0, 2, 2),
+                new Tetromino("....XXXX.", Field.Green),
+                new Tetromino("...XXX.X.", Field.Purple, 180),
+                new Tetromino("...XX..XX", Field.Red),
             };
 
             Reset();
@@ -114,6 +115,7 @@ namespace TetrisLogic
             {
                 Controller = NextContainer.Swap(randomTetromino);
                 Controller.Reset(Map.Width / 2 - 2, -Controller.Height);
+
                 UpdateGhost();
             }
         }
@@ -124,6 +126,7 @@ namespace TetrisLogic
         public void Reset()
         {
             isNewHoldMade = false;
+            Score = 0;
 
             HoldContainer = new Container();
             NextContainer = new Container();
@@ -168,6 +171,7 @@ namespace TetrisLogic
                 {
                     isNewHoldMade = false;
                     Map.PlaceTetromino(Controller);
+                    Score += Map.ClearLines() * 100;
                     Next();
                     return false;
                 }
