@@ -141,7 +141,7 @@ namespace Games
         public override void Play()
         {
             ConsoleEx.Create(42, 26);
-            ConsoleEx.SetFont("Terminal", 40, 40);
+            ConsoleEx.SetFont("Terminal", 24, 24);
             ConsoleEx.SetColorPalette(new ColorPalette("./Color/tetris.accpal"));
 
             game.IsPaused = false;
